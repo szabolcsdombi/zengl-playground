@@ -31,7 +31,7 @@ class Playground:
         zengl_extras.init()
 
         pygame.init()
-        pygame.display.set_mode((1280, 720), flags=pygame.OPENGL | pygame.DOUBLEBUF | pygame.NOFRAME, vsync=True)
+        pygame.display.set_mode((1280, 720), flags=pygame.OPENGL | pygame.DOUBLEBUF, vsync=True)
         pygame.display.set_caption('ZenGL Playground')
         pygame.display.set_icon(logo.render_logo())
         pygame.mouse.set_visible(False)
@@ -58,6 +58,10 @@ class Playground:
             return self.handler.execute_command(line)
         scope = {'self': self.handler}
         return eval(line, globals=scope, locals=scope)
+
+    def setup_moderngl(self, ctx):
+        ctx._screen = ctx.detect_framebuffer(zengl.inspect(self.grid.pipeline)['framebuffer'])
+        ctx.includes['main_uniform_buffer'] = self.ctx.includes['main_uniform_buffer']
 
     def run(self):
         if hasattr(self.handler, 'on_load'):
